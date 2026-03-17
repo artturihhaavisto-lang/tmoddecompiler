@@ -11,16 +11,39 @@ import tempfile
 from pathlib import Path
 
 
+def _find_ilspycmd() -> str | None:
+    """Find the ilspycmd binary, checking PATH and common install locations."""
+    # Check PATH first
+    for name in ['ilspycmd']:
+        try:
+            result = subprocess.run(
+                [name, '--version'],
+                capture_output=True, text=True, timeout=10
+            )
+            if result.returncode == 0:
+                return name
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+    # Check ~/.dotnet/tools (default .NET global tool location)
+    dotnet_tools_path = os.path.join(os.path.expanduser('~'), '.dotnet', 'tools', 'ilspycmd')
+    if os.path.isfile(dotnet_tools_path):
+        try:
+            result = subprocess.run(
+                [dotnet_tools_path, '--version'],
+                capture_output=True, text=True, timeout=10
+            )
+            if result.returncode == 0:
+                return dotnet_tools_path
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            pass
+
+    return None
+
+
 def check_ilspycmd() -> bool:
     """Check if ilspycmd is available."""
-    try:
-        result = subprocess.run(
-            ['ilspycmd', '--version'],
-            capture_output=True, text=True, timeout=10
-        )
-        return result.returncode == 0
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        return False
+    return _find_ilspycmd() is not None
 
 
 def decompile_dll(dll_path: str, output_dir: str) -> dict[str, str]:
@@ -36,8 +59,12 @@ def decompile_dll(dll_path: str, output_dir: str) -> dict[str, str]:
     """
     os.makedirs(output_dir, exist_ok=True)
 
+    ilspy = _find_ilspycmd()
+    if ilspy is None:
+        raise RuntimeError("ilspycmd not found")
+
     result = subprocess.run(
-        ['ilspycmd', dll_path, '-p', '-o', output_dir],
+        [ilspy, dll_path, '-p', '-o', output_dir],
         capture_output=True, text=True, timeout=120
     )
 
