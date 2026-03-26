@@ -1,0 +1,38 @@
+-- ─────────────────────────────────────────────────────────
+-- LOGGED SET
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS LoggedSet (
+    id                      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    programmedExerciseId    INTEGER NOT NULL,
+    setNumber               INTEGER NOT NULL,
+    weightKg                REAL    NOT NULL,
+    reps                    INTEGER NOT NULL,
+    rpe                     REAL    NOT NULL,
+    skipped                 INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (programmedExerciseId) REFERENCES ProgrammedExercise(id) ON DELETE CASCADE
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertLoggedSet:
+INSERT INTO LoggedSet (programmedExerciseId, setNumber, weightKg, reps, rpe, skipped)
+VALUES (:programmedExerciseId, :setNumber, :weightKg, :reps, :rpe, :skipped);
+
+getSetsForProgrammedExercise:
+SELECT * FROM LoggedSet WHERE programmedExerciseId = :programmedExerciseId ORDER BY setNumber;
+
+getHistoryForExercise:
+SELECT ls.*
+FROM LoggedSet ls
+INNER JOIN ProgrammedExercise pe ON ls.programmedExerciseId = pe.id
+WHERE pe.exerciseId = :exerciseId
+ORDER BY ls.id DESC;
+
+getAllLoggedSetsForSession:
+SELECT ls.*
+FROM LoggedSet ls
+INNER JOIN ProgrammedExercise pe ON ls.programmedExerciseId = pe.id
+WHERE pe.sessionId = :sessionId
+ORDER BY pe.orderIndex, ls.setNumber;

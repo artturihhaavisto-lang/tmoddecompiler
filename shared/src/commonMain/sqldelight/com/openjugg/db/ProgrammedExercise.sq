@@ -1,0 +1,39 @@
+-- ─────────────────────────────────────────────────────────
+-- PROGRAMMED EXERCISE
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS ProgrammedExercise (
+    id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    sessionId           INTEGER NOT NULL,
+    exerciseId          INTEGER NOT NULL,
+    exerciseName        TEXT    NOT NULL DEFAULT '',
+    orderIndex          INTEGER NOT NULL,
+    targetSets          INTEGER NOT NULL,
+    targetReps          INTEGER NOT NULL,
+    targetRpe           REAL    NOT NULL,
+    suggestedWeightKg   REAL    NOT NULL,
+    isAmrap             INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (sessionId)  REFERENCES TrainingSession(id) ON DELETE CASCADE,
+    FOREIGN KEY (exerciseId) REFERENCES Exercise(id)
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertProgrammedExercise:
+INSERT INTO ProgrammedExercise (
+    sessionId, exerciseId, exerciseName, orderIndex,
+    targetSets, targetReps, targetRpe, suggestedWeightKg, isAmrap
+) VALUES (
+    :sessionId, :exerciseId, :exerciseName, :orderIndex,
+    :targetSets, :targetReps, :targetRpe, :suggestedWeightKg, :isAmrap
+);
+
+updateProgrammedExercise:
+UPDATE ProgrammedExercise SET
+    suggestedWeightKg   = :suggestedWeightKg,
+    targetSets          = :targetSets
+WHERE id = :id;
+
+getExercisesForSession:
+SELECT * FROM ProgrammedExercise WHERE sessionId = :sessionId ORDER BY orderIndex;

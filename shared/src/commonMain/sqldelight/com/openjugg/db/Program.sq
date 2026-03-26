@@ -1,0 +1,26 @@
+-- ─────────────────────────────────────────────────────────
+-- PROGRAM
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS Program (
+    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    userId      INTEGER NOT NULL,
+    name        TEXT    NOT NULL,
+    goal        TEXT    NOT NULL,
+    startDate   INTEGER NOT NULL,
+    endDate     INTEGER NOT NULL,
+
+    FOREIGN KEY (userId) REFERENCES UserProfile(id) ON DELETE CASCADE
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertProgram:
+INSERT INTO Program (userId, name, goal, startDate, endDate)
+VALUES (:userId, :name, :goal, :startDate, :endDate);
+
+getActiveProgramForUser:
+SELECT * FROM Program WHERE userId = :userId ORDER BY startDate DESC LIMIT 1;
+
+getProgramById:
+SELECT * FROM Program WHERE id = :id;

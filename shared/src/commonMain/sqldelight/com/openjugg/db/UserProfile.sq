@@ -1,0 +1,63 @@
+-- ─────────────────────────────────────────────────────────
+-- USER PROFILE
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS UserProfile (
+    id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name                TEXT    NOT NULL,
+    age                 INTEGER NOT NULL,
+    gender              TEXT    NOT NULL,
+    bodyweightKg        REAL    NOT NULL,
+    heightCm            REAL    NOT NULL,
+    experienceLevel     TEXT    NOT NULL,
+    trainingGoal        TEXT    NOT NULL,
+    daysPerWeek         INTEGER NOT NULL,
+    meetDate            INTEGER,
+    squatMax            REAL    NOT NULL,
+    benchMax            REAL    NOT NULL,
+    deadliftMax         REAL    NOT NULL,
+    squatWeakPoints     TEXT    NOT NULL DEFAULT '[]',
+    benchWeakPoints     TEXT    NOT NULL DEFAULT '[]',
+    deadliftWeakPoints  TEXT    NOT NULL DEFAULT '[]'
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertUserProfile:
+INSERT OR REPLACE INTO UserProfile (
+    name, age, gender, bodyweightKg, heightCm, experienceLevel,
+    trainingGoal, daysPerWeek, meetDate, squatMax, benchMax, deadliftMax,
+    squatWeakPoints, benchWeakPoints, deadliftWeakPoints
+) VALUES (
+    :name, :age, :gender, :bodyweightKg, :heightCm, :experienceLevel,
+    :trainingGoal, :daysPerWeek, :meetDate, :squatMax, :benchMax, :deadliftMax,
+    :squatWeakPoints, :benchWeakPoints, :deadliftWeakPoints
+);
+
+updateUserProfile:
+UPDATE UserProfile SET
+    name                = :name,
+    age                 = :age,
+    gender              = :gender,
+    bodyweightKg        = :bodyweightKg,
+    heightCm            = :heightCm,
+    experienceLevel     = :experienceLevel,
+    trainingGoal        = :trainingGoal,
+    daysPerWeek         = :daysPerWeek,
+    meetDate            = :meetDate,
+    squatMax            = :squatMax,
+    benchMax            = :benchMax,
+    deadliftMax         = :deadliftMax,
+    squatWeakPoints     = :squatWeakPoints,
+    benchWeakPoints     = :benchWeakPoints,
+    deadliftWeakPoints  = :deadliftWeakPoints
+WHERE id = :id;
+
+getActiveProfile:
+SELECT * FROM UserProfile ORDER BY id DESC LIMIT 1;
+
+getProfileById:
+SELECT * FROM UserProfile WHERE id = :id;
+
+deleteProfile:
+DELETE FROM UserProfile WHERE id = :id;
