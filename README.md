@@ -1,22 +1,24 @@
 # OpenJugg
 
-AI-driven strength training program generator for powerlifters and strength athletes.
+The Juggernaut Method — automated, local, and open source.
 
-## What It Does
+## What It Is
 
-OpenJugg creates personalized, periodized training programs based on your profile, goals, and current maxes. It handles everything from phase structure to weekly volume, exercise selection, and daily load prescription — all grounded in sports science principles like RPE-based autoregulation and volume landmarks (MEV/MAV/MRV).
+The [Juggernaut Method](https://www.jtsstrength.com/juggernaut-method/) is one of the most respected periodization systems in powerlifting, developed by Chad Wesley Smith. The problem: running it correctly requires manually tracking waves, calculating weights, managing phase transitions, and adjusting for fatigue. Most people just wing it.
 
-## Features
+OpenJugg implements the full Juggernaut methodology as software. You enter your maxes and available training days, and it generates your entire program — every session, every set, every weight. Everything the method prescribes, handled automatically. No spreadsheets, no subscription, runs entirely on your device.
 
-- **Program generation** — Full periodized programs (Hypertrophy → Strength → Peaking → Deload) tailored to your experience level and goals
-- **Goal types** — Powerlifting, Powerbuilding, or Power Combo
-- **Smart exercise selection** — Picks exercises that target your specific weak points in each lift
-- **Load progression** — Weekly rep/RPE/intensity prescriptions that progress automatically through each phase
-- **1RM estimation** — Epley/Brzycki formulas + RPE chart; reverse-calculates suggested working weights
-- **Readiness adjustment** — Modifies session difficulty based on sleep, nutrition, motivation, and soreness
-- **Set logging** — Tracks actual weight/reps/RPE and maintains performance history
-- **Meet date support** — Structures periodization backward from a competition date
-- **3–6 day splits** — Distributes lifts intelligently across your available training days
+## What It Automates
+
+The Juggernaut Method has a lot of moving parts. OpenJugg handles all of them:
+
+- **Phase structure** — Hypertrophy → Strength → Peaking → Deload, sequenced and timed automatically based on your experience level and goal
+- **Wave progression** — Rep targets, RPE, and intensity advance week-to-week within each phase without you touching a spreadsheet
+- **Weight prescription** — Every working set has a suggested weight calculated from your maxes and the day's RPE target
+- **Exercise selection** — Accessories are chosen based on your stated weak points in each lift (e.g. quad weakness → more front squat, hip flexor work)
+- **Autoregulation** — Log your readiness (sleep, soreness, nutrition) and the session adjusts difficulty accordingly
+- **Meet prep** — Give it a competition date and it works the periodization backward so you peak at the right time
+- **3–6 day splits** — Frequency and lift distribution adapt to however many days you have available
 
 ## Tech Stack
 
