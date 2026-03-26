@@ -1,0 +1,43 @@
+-- ─────────────────────────────────────────────────────────
+-- EXERCISE LIBRARY
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS Exercise (
+    id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name                TEXT    NOT NULL,
+    liftType            TEXT    NOT NULL,
+    category            TEXT    NOT NULL,
+    primaryMuscles      TEXT    NOT NULL DEFAULT '[]',
+    secondaryMuscles    TEXT    NOT NULL DEFAULT '[]',
+    equipment           TEXT    NOT NULL,
+    description         TEXT    NOT NULL DEFAULT '',
+    cues                TEXT    NOT NULL DEFAULT '[]',
+    commonMistakes      TEXT    NOT NULL DEFAULT '[]',
+    addressesWeakPoints TEXT    NOT NULL DEFAULT '[]'
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertExercise:
+INSERT OR REPLACE INTO Exercise (
+    id, name, liftType, category, primaryMuscles, secondaryMuscles,
+    equipment, description, cues, commonMistakes, addressesWeakPoints
+) VALUES (
+    :id, :name, :liftType, :category, :primaryMuscles, :secondaryMuscles,
+    :equipment, :description, :cues, :commonMistakes, :addressesWeakPoints
+);
+
+getAllExercises:
+SELECT * FROM Exercise;
+
+getExerciseById:
+SELECT * FROM Exercise WHERE id = :id;
+
+getExercisesByLiftType:
+SELECT * FROM Exercise WHERE liftType = :liftType;
+
+getExercisesByLiftTypeAndCategory:
+SELECT * FROM Exercise WHERE liftType = :liftType AND category = :category;
+
+countExercises:
+SELECT COUNT(*) FROM Exercise;

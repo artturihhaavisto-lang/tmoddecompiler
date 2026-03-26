@@ -1,0 +1,20 @@
+-- ─────────────────────────────────────────────────────────
+-- TRAINING WEEK
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS TrainingWeek (
+    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    phaseId     INTEGER NOT NULL,
+    weekNumber  INTEGER NOT NULL,
+
+    FOREIGN KEY (phaseId) REFERENCES Phase(id) ON DELETE CASCADE
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertTrainingWeek:
+INSERT INTO TrainingWeek (phaseId, weekNumber)
+VALUES (:phaseId, :weekNumber);
+
+getWeeksForPhase:
+SELECT * FROM TrainingWeek WHERE phaseId = :phaseId ORDER BY weekNumber;

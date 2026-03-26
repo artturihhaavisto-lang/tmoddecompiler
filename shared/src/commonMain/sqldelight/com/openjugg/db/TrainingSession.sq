@@ -1,0 +1,39 @@
+-- ─────────────────────────────────────────────────────────
+-- TRAINING SESSION
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS TrainingSession (
+    id                  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    weekId              INTEGER NOT NULL,
+    dayOfWeek           INTEGER NOT NULL,
+    label               TEXT    NOT NULL DEFAULT '',
+    readinessScore      REAL,
+    readinessInputs     TEXT,
+    sessionDifficulty   INTEGER,
+    completed           INTEGER NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (weekId) REFERENCES TrainingWeek(id) ON DELETE CASCADE
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertTrainingSession:
+INSERT INTO TrainingSession (weekId, dayOfWeek, label, readinessScore, readinessInputs, sessionDifficulty, completed)
+VALUES (:weekId, :dayOfWeek, :label, :readinessScore, :readinessInputs, :sessionDifficulty, :completed);
+
+updateTrainingSession:
+UPDATE TrainingSession SET
+    readinessScore      = :readinessScore,
+    readinessInputs     = :readinessInputs,
+    sessionDifficulty   = :sessionDifficulty,
+    completed           = :completed
+WHERE id = :id;
+
+getSessionsForWeek:
+SELECT * FROM TrainingSession WHERE weekId = :weekId ORDER BY dayOfWeek;
+
+getSessionById:
+SELECT * FROM TrainingSession WHERE id = :id;
+
+getCompletedSessionsForWeek:
+SELECT * FROM TrainingSession WHERE weekId = :weekId AND completed = 1;

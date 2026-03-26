@@ -1,0 +1,22 @@
+-- ─────────────────────────────────────────────────────────
+-- PHASE
+-- ─────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS Phase (
+    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    programId   INTEGER NOT NULL,
+    type        TEXT    NOT NULL,
+    weekCount   INTEGER NOT NULL,
+    orderIndex  INTEGER NOT NULL,
+
+    FOREIGN KEY (programId) REFERENCES Program(id) ON DELETE CASCADE
+);
+
+-- ─── Queries ─────────────────────────────────────────────
+
+insertPhase:
+INSERT INTO Phase (programId, type, weekCount, orderIndex)
+VALUES (:programId, :type, :weekCount, :orderIndex);
+
+getPhasesForProgram:
+SELECT * FROM Phase WHERE programId = :programId ORDER BY orderIndex;
