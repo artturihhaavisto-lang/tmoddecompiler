@@ -38,17 +38,6 @@ data class TrainingSession(
     val exercises: List<ProgrammedExercise> = emptyList()
 )
 
-data class ReadinessInputs(
-    val sleep: Int,          // 1-5
-    val nutrition: Int,      // 1-5
-    val motivation: Int,     // 1-5
-    val overallSoreness: Int, // 1-5 (1=fresh, 5=destroyed)
-    val quadSoreness: Int = 1,
-    val hamstringSoreness: Int = 1,
-    val chestSoreness: Int = 1,
-    val backSoreness: Int = 1,
-    val shoulderSoreness: Int = 1
-)
 
 data class ProgrammedExercise(
     val id: Long = 0,

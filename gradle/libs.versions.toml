@@ -1,8 +1,8 @@
 [versions]
-kotlin                  = "2.0.0"
-ksp                     = "2.0.0-1.0.21"
+kotlin                  = "2.1.20"
+ksp                     = "2.1.20-1.0.32"
 agp                     = "8.4.2"
-compose-multiplatform   = "1.6.11"
+compose-multiplatform   = "1.7.3"
 sqldelight              = "2.0.2"
 koin                    = "3.5.6"
 koin-compose            = "3.5.6"

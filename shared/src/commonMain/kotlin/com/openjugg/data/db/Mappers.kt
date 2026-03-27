@@ -1,7 +1,16 @@
 package com.openjugg.data.db
 
 import com.openjugg.db.*
-import com.openjugg.domain.model.*
+import com.openjugg.domain.model.ExerciseCategory
+import com.openjugg.domain.model.ExperienceLevel
+import com.openjugg.domain.model.EquipmentType
+import com.openjugg.domain.model.Gender
+import com.openjugg.domain.model.LiftType
+import com.openjugg.domain.model.MuscleGroup
+import com.openjugg.domain.model.PhaseType
+import com.openjugg.domain.model.ReadinessInputs
+import com.openjugg.domain.model.TrainingGoal
+import com.openjugg.domain.model.WeakPoint
 
 // ─── UserProfile ─────────────────────────────────────────
 

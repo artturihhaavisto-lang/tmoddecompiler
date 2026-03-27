@@ -4,3 +4,9 @@ __pycache__/
 .env
 *.tmod
 uploads/
+
+# Gradle
+.gradle/
+build/
+*.class
+local.properties

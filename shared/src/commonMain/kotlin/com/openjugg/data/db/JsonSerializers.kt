@@ -16,6 +16,7 @@ internal val AppJson = Json {
 
 // ─── List<WeakPoint> ─────────────────────────────────────
 
+@JvmName("weakPointListToJson")
 internal fun List<WeakPoint>.toJsonString(): String =
     AppJson.encodeToString(this)
 
@@ -24,6 +25,7 @@ internal fun String.toWeakPointList(): List<WeakPoint> =
 
 // ─── List<MuscleGroup> ───────────────────────────────────
 
+@JvmName("muscleGroupListToJson")
 internal fun List<MuscleGroup>.toJsonString(): String =
     AppJson.encodeToString(this)
 
@@ -32,6 +34,7 @@ internal fun String.toMuscleGroupList(): List<MuscleGroup> =
 
 // ─── List<String> ────────────────────────────────────────
 
+@JvmName("stringListToJson")
 internal fun List<String>.toJsonString(): String =
     AppJson.encodeToString(this)
 
