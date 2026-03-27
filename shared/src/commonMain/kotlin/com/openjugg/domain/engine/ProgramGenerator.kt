@@ -126,6 +126,10 @@ class ProgramGenerator(
         allowedExerciseIds: Set<Long>
     ): TrainingSession {
 
+        // Week 4 of every Juggernaut wave is a deload — use DELOAD phase type for
+        // exercise selection so we pick the competition lift + 1 light accessory only.
+        val selectorPhaseType = if (weekInPhase == 4) PhaseType.DELOAD else phaseType
+
         val allExercises = mutableListOf<ProgrammedExercise>()
         var exerciseOrder = 0
 
@@ -133,7 +137,7 @@ class ProgramGenerator(
         val primaryExercises = buildExercisesForLift(
             liftType = slot.primary,
             isVariationDay = false,  // Primary day
-            phaseType = phaseType,
+            phaseType = selectorPhaseType,
             weekInPhase = weekInPhase,
             totalWeeksInPhase = totalWeeksInPhase,
             oneRepMax = maxes[slot.primary] ?: 100f,
@@ -151,7 +155,7 @@ class ProgramGenerator(
             val secondaryExercises = buildExercisesForLift(
                 liftType = secondaryLift,
                 isVariationDay = true,  // Secondary = variation day
-                phaseType = phaseType,
+                phaseType = selectorPhaseType,
                 weekInPhase = weekInPhase,
                 totalWeeksInPhase = totalWeeksInPhase,
                 oneRepMax = maxes[secondaryLift] ?: 100f,
@@ -164,9 +168,10 @@ class ProgramGenerator(
             allExercises.addAll(secondaryExercises)
         }
 
+        val label = if (weekInPhase == 4) "${slot.label} (deload)" else slot.label
         return TrainingSession(
             dayOfWeek = slot.dayOfWeek,
-            label = slot.label,
+            label = label,
             exercises = allExercises
         )
     }
