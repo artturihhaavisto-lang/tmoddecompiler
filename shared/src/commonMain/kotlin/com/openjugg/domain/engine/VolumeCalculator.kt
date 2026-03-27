@@ -127,6 +127,10 @@ object VolumeCalculator {
                 val endVol = landmarks.mev
                 (startVol + (endVol - startVol) * progress).toInt()
             }
+            PhaseType.COMPETITION -> {
+                // Very low volume, near MEV (competition peaking)
+                landmarks.mev
+            }
             PhaseType.DELOAD -> {
                 // Half of MEV
                 (landmarks.mev / 2).coerceAtLeast(2)

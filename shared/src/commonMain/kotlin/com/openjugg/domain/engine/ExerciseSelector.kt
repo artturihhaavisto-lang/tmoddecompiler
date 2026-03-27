@@ -40,13 +40,16 @@ object ExerciseSelector {
         phaseType: PhaseType,
         weakPoints: List<WeakPoint>,
         exerciseLibrary: List<Exercise>,
-        totalSets: Int
+        totalSets: Int,
+        allowedExerciseIds: Set<Long> = emptySet()
     ): List<SelectedExercise> {
 
         val liftExercises = exerciseLibrary.filter { it.liftType == liftType }
-        val primary = liftExercises.filter { it.category == ExerciseCategory.PRIMARY }
-        val variations = liftExercises.filter { it.category == ExerciseCategory.VARIATION }
-        val accessories = liftExercises.filter { it.category == ExerciseCategory.ACCESSORY }
+        val filtered = if (allowedExerciseIds.isEmpty()) liftExercises
+                       else liftExercises.filter { it.category == ExerciseCategory.PRIMARY || it.id in allowedExerciseIds }
+        val primary = filtered.filter { it.category == ExerciseCategory.PRIMARY }
+        val variations = filtered.filter { it.category == ExerciseCategory.VARIATION }
+        val accessories = filtered.filter { it.category == ExerciseCategory.ACCESSORY }
 
         // Score variations by how many of the user's weak points they address
         val scoredVariations = variations
@@ -131,7 +134,8 @@ object ExerciseSelector {
         val maxAccessories = when (phaseType) {
             PhaseType.HYPERTROPHY -> 3
             PhaseType.STRENGTH    -> 2
-            PhaseType.PEAKING     -> 0
+            PhaseType.PEAKING     -> 1
+            PhaseType.COMPETITION -> 1
             PhaseType.DELOAD      -> 1
         }
 

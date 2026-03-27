@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.openjugg.domain.model.*
 
 @Composable
-fun SetupScreen(onGenerate: (UserProfile) -> Unit) {
+fun SetupScreen(onNext: (UserProfile) -> Unit) {
     var name by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("25") }
     var gender by remember { mutableStateOf(Gender.MALE) }
@@ -38,6 +38,11 @@ fun SetupScreen(onGenerate: (UserProfile) -> Unit) {
         Text("OpenJugg", style = MaterialTheme.typography.headlineLarge)
         Text("AI-Powered Strength Program Generator", style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            "16-week Juggernaut Method — 10s → 8s → 5s → 3s waves",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.tertiary
+        )
 
         Spacer(Modifier.height(8.dp))
 
@@ -127,12 +132,12 @@ fun SetupScreen(onGenerate: (UserProfile) -> Unit) {
                     error = "Please fill in all required fields with valid numbers."
                 } else {
                     error = null
-                    onGenerate(profile)
+                    onNext(profile)
                 }
             },
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text("Generate Program")
+            Text("Next: Choose Exercises  →")
         }
     }
 }

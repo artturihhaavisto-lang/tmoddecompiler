@@ -70,7 +70,16 @@ private fun PhaseCard(phase: Phase) {
         PhaseType.HYPERTROPHY -> MaterialTheme.colorScheme.tertiary
         PhaseType.STRENGTH    -> MaterialTheme.colorScheme.primary
         PhaseType.PEAKING     -> MaterialTheme.colorScheme.error
+        PhaseType.COMPETITION -> MaterialTheme.colorScheme.error
         PhaseType.DELOAD      -> MaterialTheme.colorScheme.secondary
+    }
+
+    val waveName = when (phase.type) {
+        PhaseType.HYPERTROPHY -> "Wave 1 — 10s (55–65%)"
+        PhaseType.STRENGTH    -> "Wave 2 — 8s (65–75%)"
+        PhaseType.PEAKING     -> "Wave 3 — 5s (75–82.5%)"
+        PhaseType.COMPETITION -> "Wave 4 — 3s (85–92.5%)"
+        PhaseType.DELOAD      -> "Deload"
     }
 
     Card(modifier = Modifier.fillMaxWidth()) {
@@ -90,7 +99,7 @@ private fun PhaseCard(phase: Phase) {
                 Spacer(Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        "Phase ${phase.order + 1}: ${phase.type.name.replace('_', ' ')}",
+                        waveName,
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -121,6 +130,14 @@ private fun WeekSection(week: TrainingWeek) {
     var expanded by remember { mutableStateOf(week.weekNumber == 1) }
 
     Column {
+        val weekType = when (week.weekNumber) {
+            1 -> "Accumulation"
+            2 -> "Intensification"
+            3 -> "Realization"
+            4 -> "Deload"
+            else -> "Week ${week.weekNumber}"
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +146,7 @@ private fun WeekSection(week: TrainingWeek) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Week ${week.weekNumber}",
+                "Week ${week.weekNumber} — $weekType",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(1f)

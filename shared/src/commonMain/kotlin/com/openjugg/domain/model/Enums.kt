@@ -37,10 +37,11 @@ enum class WeakPoint {
 
 @Serializable
 enum class PhaseType {
-    HYPERTROPHY,   // High volume, moderate intensity (60-72% 1RM)
-    STRENGTH,      // Moderate volume, high intensity (75-85% 1RM)
-    PEAKING,       // Low volume, very high intensity (85-95%+ 1RM)
-    DELOAD         // Recovery week (50-60% 1RM, halved volume)
+    HYPERTROPHY,   // 10s wave: 55–65% 1RM, 4 weeks (3 active + deload)
+    STRENGTH,      // 8s wave:  65–75% 1RM, 4 weeks
+    PEAKING,       // 5s wave:  75–82.5% 1RM, 4 weeks
+    COMPETITION,   // 3s wave:  85–92.5% 1RM, 4 weeks
+    DELOAD         // Recovery week (used internally within each wave)
 }
 
 @Serializable

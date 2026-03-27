@@ -23,9 +23,10 @@ class ProgramGenerator(
      * Generate a complete program for the given user.
      *
      * @param user  Fully filled-out user profile
+     * @param allowedExerciseIds  Set of exercise IDs the user wants included. Empty = all.
      * @return      A complete Program with all phases, weeks, sessions, and exercises populated
      */
-    fun generate(user: UserProfile): Program {
+    fun generate(user: UserProfile, allowedExerciseIds: Set<Long> = emptySet()): Program {
 
         val nowMillis = System.currentTimeMillis()
 
@@ -87,7 +88,8 @@ class ProgramGenerator(
                         maxes = maxes,
                         volumeMap = volumeMap,
                         freqMap = freqMap,
-                        weakPointsMap = weakPointsMap
+                        weakPointsMap = weakPointsMap,
+                        allowedExerciseIds = allowedExerciseIds
                     )
                 }
 
@@ -120,7 +122,8 @@ class ProgramGenerator(
         maxes: Map<LiftType, Float>,
         volumeMap: Map<LiftType, VolumeCalculator.VolumeLandmarks>,
         freqMap: Map<LiftType, Int>,
-        weakPointsMap: Map<LiftType, List<WeakPoint>>
+        weakPointsMap: Map<LiftType, List<WeakPoint>>,
+        allowedExerciseIds: Set<Long>
     ): TrainingSession {
 
         val allExercises = mutableListOf<ProgrammedExercise>()
@@ -137,7 +140,8 @@ class ProgramGenerator(
             volumeLandmarks = volumeMap[slot.primary]!!,
             frequency = freqMap[slot.primary] ?: 1,
             weakPoints = weakPointsMap[slot.primary] ?: emptyList(),
-            startOrder = exerciseOrder
+            startOrder = exerciseOrder,
+            allowedExerciseIds = allowedExerciseIds
         )
         allExercises.addAll(primaryExercises)
         exerciseOrder += primaryExercises.size
@@ -154,7 +158,8 @@ class ProgramGenerator(
                 volumeLandmarks = volumeMap[secondaryLift]!!,
                 frequency = freqMap[secondaryLift] ?: 1,
                 weakPoints = weakPointsMap[secondaryLift] ?: emptyList(),
-                startOrder = exerciseOrder
+                startOrder = exerciseOrder,
+                allowedExerciseIds = allowedExerciseIds
             )
             allExercises.addAll(secondaryExercises)
         }
@@ -179,16 +184,18 @@ class ProgramGenerator(
         volumeLandmarks: VolumeCalculator.VolumeLandmarks,
         frequency: Int,
         weakPoints: List<WeakPoint>,
-        startOrder: Int
+        startOrder: Int,
+        allowedExerciseIds: Set<Long>
     ): List<ProgrammedExercise> {
 
-        // Total weekly sets for this lift
-        val weeklyTotalSets = VolumeCalculator.setsForPhaseWeek(
-            volumeLandmarks, phaseType, weekInPhase, totalWeeksInPhase
-        )
-
-        // Sets for THIS session = weekly total / frequency
-        val sessionSets = (weeklyTotalSets.toFloat() / frequency.coerceAtLeast(1)).toInt().coerceAtLeast(3)
+        // Fixed accessory set budget based on week in phase (Juggernaut structure)
+        val accessorySetBudget = when (weekInPhase) {
+            1 -> 12  // accumulation: 3 accessories × 3 sets
+            2 -> 9   // intensification: 3 accessories × 3 sets
+            3 -> 6   // realization: 2 accessories × 3 sets
+            4 -> 3   // deload: 1 accessory × 3 sets
+            else -> 9
+        }
 
         // Select exercises
         val selectedExercises = ExerciseSelector.selectForSession(
@@ -197,7 +204,8 @@ class ProgramGenerator(
             phaseType = phaseType,
             weakPoints = weakPoints,
             exerciseLibrary = exerciseLibrary,
-            totalSets = sessionSets
+            totalSets = accessorySetBudget,
+            allowedExerciseIds = allowedExerciseIds
         )
 
         // Prescribe load for each
@@ -207,7 +215,7 @@ class ProgramGenerator(
                 weekInPhase = weekInPhase,
                 totalWeeksInPhase = totalWeeksInPhase,
                 isPrimaryLift = selected.isPrimary,
-                totalWeekSets = weeklyTotalSets,
+                totalWeekSets = accessorySetBudget,
                 exercisesInSession = selectedExercises.size
             )
 
@@ -220,9 +228,7 @@ class ProgramGenerator(
                 ExerciseCategory.ACCESSORY -> oneRepMax * 0.70f
             }
 
-            val suggestedWeight = OneRepMaxEstimator.suggestedWeight(
-                effectiveMax, prescription.targetReps, prescription.targetRpe
-            )
+            val suggestedWeight = OneRepMaxEstimator.weightForPercentage(effectiveMax, prescription.intensityPercentage)
 
             ProgrammedExercise(
                 exerciseId = selected.exercise.id,
@@ -232,8 +238,7 @@ class ProgramGenerator(
                 targetReps = prescription.targetReps,
                 targetRpe = prescription.targetRpe,
                 suggestedWeightKg = suggestedWeight,
-                isAmrap = phaseType == PhaseType.HYPERTROPHY && index == 0 && !isVariationDay
-                // Last set AMRAP on primary lift during hypertrophy
+                isAmrap = prescription.isAmrap && index == 0  // only first (main) exercise
             )
         }
     }

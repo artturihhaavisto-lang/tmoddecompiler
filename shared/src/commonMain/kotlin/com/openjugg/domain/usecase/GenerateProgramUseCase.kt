@@ -21,7 +21,7 @@ class GenerateProgramUseCase(
     private val exerciseRepo: IExerciseRepository,
     private val programRepo: IProgramRepository
 ) {
-    suspend operator fun invoke(profile: UserProfile): Result<Program> {
+    suspend operator fun invoke(profile: UserProfile, allowedExerciseIds: Set<Long> = emptySet()): Result<Program> {
         return runCatching {
             // 1. Save profile
             val userId = userRepo.saveProfile(profile)
@@ -35,7 +35,7 @@ class GenerateProgramUseCase(
 
             // 4. Generate program
             val generator = ProgramGenerator(exercises)
-            val program = generator.generate(savedProfile)
+            val program = generator.generate(savedProfile, allowedExerciseIds)
 
             // 5. Persist
             val programId = programRepo.saveFullProgram(program)
