@@ -17,6 +17,7 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutines.swing)
             }
         }
     }
