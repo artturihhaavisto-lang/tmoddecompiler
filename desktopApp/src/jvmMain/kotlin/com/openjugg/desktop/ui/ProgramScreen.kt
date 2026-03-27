@@ -67,11 +67,11 @@ private fun PhaseCard(phase: Phase) {
     var expanded by remember { mutableStateOf(phase.order == 0) }
 
     val phaseColor = when (phase.type) {
-        PhaseType.HYPERTROPHY -> MaterialTheme.colorScheme.tertiary
-        PhaseType.STRENGTH    -> MaterialTheme.colorScheme.primary
-        PhaseType.PEAKING     -> MaterialTheme.colorScheme.error
-        PhaseType.COMPETITION -> MaterialTheme.colorScheme.error
-        PhaseType.DELOAD      -> MaterialTheme.colorScheme.secondary
+        PhaseType.HYPERTROPHY -> colorHypertrophy
+        PhaseType.STRENGTH    -> colorStrength
+        PhaseType.PEAKING     -> colorPeaking
+        PhaseType.COMPETITION -> colorCompetition
+        PhaseType.DELOAD      -> colorDeload
     }
 
     val waveName = when (phase.type) {
@@ -244,7 +244,8 @@ private fun ExerciseRow(ex: ProgrammedExercise) {
         Text(
             setsLabel,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = if (ex.isAmrap) colorCompetition else MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = if (ex.isAmrap) FontWeight.SemiBold else FontWeight.Normal,
             modifier = Modifier.width(100.dp)
         )
         Text(
